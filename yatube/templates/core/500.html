@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Ошибка сервера - Yatube{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mx-auto text-center py-5">
+        <h1 class="display-1 text-muted">500</h1>
+        <h2>Ошибка сервера</h2>
+        <p class="text-muted">
+            Произошла внутренняя ошибка сервера. Мы уже работаем над её устранением.
+        </p>
+        <a href="{% url 'posts:index' %}" class="btn btn-primary">
+            <i class="bi bi-house me-1"></i>На главную
+        </a>
+    </div>
+</div>
+{% endblock %}

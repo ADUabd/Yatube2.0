@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load core_tags %}
+
+{% block title %}{{ profile_user.username }} - Yatube{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-4 mb-4">
+        <!-- Карточка профиля -->
+        <div class="card">
+            <div class="card-body text-center">
+                {% if profile_user.profile.avatar %}
+                    <img src="{{ profile_user.profile.avatar.url }}" alt="{{ profile_user.username }}" 
+                         class="rounded-circle mb-3" width="150" height="150" style="object-fit: cover;">
+                {% else %}
+                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto mb-3" 
+                         style="width: 150px; height: 150px;">
+                        <i class="bi bi-person display-1 text-white"></i>
+                    </div>
+                {% endif %}
+                
+                <h4>{{ profile_user.username }}</h4>
+                
+                {% if profile_user.first_name or profile_user.last_name %}
+                    <p class="text-muted mb-2">{{ profile_user.first_name }} {{ profile_user.last_name }}</p>
+                {% endif %}
+                
+                {% if profile_user.profile.bio %}
+                    <p class="mb-3">{{ profile_user.profile.bio }}</p>
+                {% endif %}
+                
+                {% if profile_user.profile.location %}
+                    <p class="text-muted small mb-2">
+                        <i class="bi bi-geo-alt me-1"></i>{{ profile_user.profile.location }}
+                    </p>
+                {% endif %}
+                
+                {% if profile_user.profile.website %}
+                    <p class="small mb-3">
+                        <a href="{{ profile_user.profile.website }}" target="_blank" rel="noopener">
+                            <i class="bi bi-link-45deg me-1"></i>{{ profile_user.profile.website|truncatechars:30 }}
+                        </a>
+                    </p>
+                {% endif %}
+                
+                <!-- Статистика -->
+                <div class="d-flex justify-content-around border-top border-bottom py-3 mb-3">
+                    <div class="text-center">
+                        <div class="fw-bold">{{ profile_user.posts_count }}</div>
+                        <small class="text-muted">{{ profile_user.posts_count|pluralize_ru:"пост,поста,постов" }}</small>
+                    </div>
+                    <a href="{% url 'users:followers' profile_user.username %}" class="text-decoration-none text-dark">
+                        <div class="fw-bold">{{ profile_user.followers_count }}</div>
+                        <small class="text-muted">{{ profile_user.followers_count|pluralize_ru:"подписчик,подписчика,подписчиков" }}</small>
+                    </a>
+                    <a href="{% url 'users:following' profile_user.username %}" class="text-decoration-none text-dark">
+                        <div class="fw-bold">{{ profile_user.following_count }}</div>
+                        <small class="text-muted">{{ profile_user.following_count|pluralize_ru:"подписка,подписки,подписок" }}</small>
+                    </a>
+                </div>
+                
+                <!-- Кнопки действий -->
+                {% if user.is_authenticated %}
+                    {% if user == profile_user %}
+                        <a href="{% url 'users:profile_edit' %}" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-gear me-1"></i>Редактировать профиль
+                        </a>
+                    {% else %}
+                        {% if is_following %}
+                            <form method="post" action="{% url 'users:unfollow' profile_user.username %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-secondary w-100">
+                                    <i class="bi bi-person-dash me-1"></i>Отписаться
+                                </button>
+                            </form>
+                        {% else %}
+                            <form method="post" action="{% url 'users:follow' profile_user.username %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="bi bi-person-plus me-1"></i>Подписаться
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-8">
+        <h5 class="mb-4">Записи пользователя</h5>
+        
+        {% if posts %}
+            {% for post in posts %}
+                {% include 'includes/post_card.html' with post=post %}
+            {% endfor %}
+            
+            {% if profile_user.posts_count > 10 %}
+                <div class="text-center">
+                    <a href="{% url 'posts:search' %}?q={{ profile_user.username }}" class="btn btn-outline-primary">
+                        Показать все записи
+                    </a>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="card text-center py-5">
+                <div class="card-body">
+                    <i class="bi bi-journal display-1 text-muted"></i>
+                    <h5 class="mt-3">Пока нет записей</h5>
+                    {% if user == profile_user %}
+                        <a href="{% url 'posts:post_create' %}" class="btn btn-primary mt-2">
+                            Создать первую запись
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

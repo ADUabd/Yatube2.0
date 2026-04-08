@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Yatube - Главная{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <h1 class="h3 mb-4">Последние записи</h1>
+        
+        {% if posts %}
+            {% for post in posts %}
+                {% include 'includes/post_card.html' with post=post %}
+            {% endfor %}
+            
+            {% include 'includes/pagination.html' %}
+        {% else %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>
+                Пока нет ни одной записи.
+                {% if user.is_authenticated %}
+                    <a href="{% url 'posts:post_create' %}">Создайте первую!</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">О проекте</h5>
+                <p class="card-text text-muted">
+                    Yatube - это социальная сеть для публикации личных записей. 
+                    Делитесь своими мыслями, фотографиями и следите за записями друзей.
+                </p>
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'users:signup' %}" class="btn btn-primary">Присоединиться</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

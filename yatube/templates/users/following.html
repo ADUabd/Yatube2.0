@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Подписки {{ profile_user.username }} - Yatube{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <h4 class="mb-4">
+            <a href="{% url 'users:profile' profile_user.username %}" class="text-decoration-none">
+                {{ profile_user.username }}
+            </a>
+            <span class="text-muted">/ Подписки</span>
+        </h4>
+        
+        {% if following %}
+            <div class="list-group">
+                {% for follow in following %}
+                    <div class="list-group-item d-flex align-items-center">
+                        <a href="{% url 'users:profile' follow.author.username %}">
+                            {% if follow.author.profile.avatar %}
+                                <img src="{{ follow.author.profile.avatar.url }}" alt="{{ follow.author.username }}" 
+                                     class="rounded-circle me-3" width="50" height="50" style="object-fit: cover;">
+                            {% else %}
+                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" 
+                                     style="width: 50px; height: 50px;">
+                                    <i class="bi bi-person text-white"></i>
+                                </div>
+                            {% endif %}
+                        </a>
+                        <div class="flex-grow-1">
+                            <a href="{% url 'users:profile' follow.author.username %}" class="fw-bold text-decoration-none">
+                                {{ follow.author.username }}
+                            </a>
+                            {% if follow.author.profile.bio %}
+                                <p class="text-muted small mb-0">{{ follow.author.profile.bio|truncatechars:100 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            {% include 'includes/pagination.html' %}
+        {% else %}
+            <div class="card text-center py-5">
+                <div class="card-body">
+                    <i class="bi bi-people display-1 text-muted"></i>
+                    <h5 class="mt-3">Нет подписок</h5>
+                    <a href="{% url 'posts:index' %}" class="btn btn-primary mt-2">Найти авторов</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

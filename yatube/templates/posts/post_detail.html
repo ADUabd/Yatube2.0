@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Пост {{ post.author.username }} - Yatube{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <!-- Пост -->
+        {% include 'includes/post_card.html' with post=post is_liked=is_liked %}
+        
+        <!-- Комментарии -->
+        <div class="card" id="comments">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-chat me-2"></i>
+                    Комментарии ({{ post.comments_count }})
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'posts:comment_create' post.pk %}" class="mb-4">
+                        {% csrf_token %}
+                        {{ comment_form.text }}
+                        <button type="submit" class="btn btn-primary mt-2">
+                            <i class="bi bi-send me-1"></i>Отправить
+                        </button>
+                    </form>
+                {% else %}
+                    <p class="text-muted">
+                        <a href="{% url 'users:login' %}">Войдите</a>, чтобы оставить комментарий.
+                    </p>
+                {% endif %}
+                
+                {% if post.comments.all %}
+                    <div class="comments-list">
+                        {% for comment in post.comments.all %}
+                            <div class="d-flex mb-3 pb-3 border-bottom">
+                                <a href="{% url 'users:profile' comment.author.username %}">
+                                    {% if comment.author.profile.avatar %}
+                                        <img src="{{ comment.author.profile.avatar.url }}" alt="{{ comment.author.username }}" 
+                                             class="rounded-circle me-2" width="32" height="32" style="object-fit: cover;">
+                                    {% else %}
+                                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-2" 
+                                             style="width: 32px; height: 32px;">
+                                            <i class="bi bi-person text-white small"></i>
+                                        </div>
+                                    {% endif %}
+                                </a>
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-center">
+                                        <a href="{% url 'users:profile' comment.author.username %}" 
+                                           class="fw-bold text-dark text-decoration-none">
+                                            {{ comment.author.username }}
+                                        </a>
+                                        <small class="text-muted ms-2">{{ comment.created_at|date:"d M Y, H:i" }}</small>
+                                        
+                                        {% if user == comment.author or user == post.author %}
+                                            <form method="post" 
+                                                  action="{% url 'posts:comment_delete' post.pk comment.pk %}" 
+                                                  class="ms-auto">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-link text-danger p-0 btn-sm"
+                                                        onclick="return confirm('Удалить комментарий?');">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                    <p class="mb-0 mt-1">{{ comment.text }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center mb-0">Пока нет комментариев. Будьте первым!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

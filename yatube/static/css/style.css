@@ -1,0 +1,192 @@
+/* Yatube Custom Styles */
+
+:root {
+    --yatube-primary: #0d6efd;
+    --yatube-secondary: #6c757d;
+    --yatube-light: #f8f9fa;
+    --yatube-dark: #212529;
+}
+
+body {
+    background-color: var(--yatube-light);
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 0.75rem;
+}
+
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Post card hover effect */
+.card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+/* Like button animation */
+.like-form button {
+    transition: transform 0.1s ease-in-out;
+}
+
+.like-form button:hover {
+    transform: scale(1.1);
+}
+
+.like-form button:active {
+    transform: scale(0.95);
+}
+
+/* Avatar styles */
+.rounded-circle {
+    object-fit: cover;
+}
+
+/* Navbar */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* Form controls */
+.form-control:focus {
+    border-color: var(--yatube-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background-color: var(--yatube-primary);
+    border-color: var(--yatube-primary);
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+/* Alert */
+.alert {
+    border: none;
+    border-radius: 0.75rem;
+}
+
+/* Dropdown */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
+}
+
+.dropdown-item:active {
+    background-color: var(--yatube-primary);
+}
+
+/* Comments */
+.comments-list .border-bottom:last-child {
+    border-bottom: none !important;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+}
+
+/* Pagination */
+.pagination {
+    gap: 0.25rem;
+}
+
+.page-link {
+    border-radius: 0.5rem !important;
+    border: none;
+    padding: 0.5rem 0.75rem;
+}
+
+.page-item.active .page-link {
+    background-color: var(--yatube-primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .navbar-collapse {
+        margin-top: 1rem;
+    }
+    
+    .navbar .input-group {
+        margin: 1rem 0;
+        max-width: 100% !important;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Textarea auto-resize */
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Image preview in posts */
+.card-img-top {
+    border-radius: 0.75rem 0.75rem 0 0;
+}
+
+/* Loading state */
+.btn.loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    top: 50%;
+    left: 50%;
+    margin-left: -0.5rem;
+    margin-top: -0.5rem;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Подписчики {{ profile_user.username }} - Yatube{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <h4 class="mb-4">
+            <a href="{% url 'users:profile' profile_user.username %}" class="text-decoration-none">
+                {{ profile_user.username }}
+            </a>
+            <span class="text-muted">/ Подписчики</span>
+        </h4>
+        
+        {% if followers %}
+            <div class="list-group">
+                {% for follow in followers %}
+                    <div class="list-group-item d-flex align-items-center">
+                        <a href="{% url 'users:profile' follow.user.username %}">
+                            {% if follow.user.profile.avatar %}
+                                <img src="{{ follow.user.profile.avatar.url }}" alt="{{ follow.user.username }}" 
+                                     class="rounded-circle me-3" width="50" height="50" style="object-fit: cover;">
+                            {% else %}
+                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" 
+                                     style="width: 50px; height: 50px;">
+                                    <i class="bi bi-person text-white"></i>
+                                </div>
+                            {% endif %}
+                        </a>
+                        <div class="flex-grow-1">
+                            <a href="{% url 'users:profile' follow.user.username %}" class="fw-bold text-decoration-none">
+                                {{ follow.user.username }}
+                            </a>
+                            {% if follow.user.profile.bio %}
+                                <p class="text-muted small mb-0">{{ follow.user.profile.bio|truncatechars:100 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            {% include 'includes/pagination.html' %}
+        {% else %}
+            <div class="card text-center py-5">
+                <div class="card-body">
+                    <i class="bi bi-people display-1 text-muted"></i>
+                    <h5 class="mt-3">Пока нет подписчиков</h5>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

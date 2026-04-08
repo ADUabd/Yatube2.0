@@ -74,7 +74,13 @@ python manage.py createsuperuser
 python manage.py collectstatic
 ```
 
-### 8. Запустить сервер разработки
+### 8. Загрузите демо бд для наглядности
+
+```bash
+python manage.py seed_demo
+```
+
+### 9. Запустить сервер разработки
 
 ```bash
 python manage.py runserver
@@ -124,6 +130,3 @@ yatube/
 pytest
 ```
 
-## Лицензия
-
-MIT
